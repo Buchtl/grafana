@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.18 (Debian 14.18-1.pgdg120+1)
+-- Dumped from database version 16.9 (Debian 16.9-1.pgdg120+1)
 -- Dumped by pg_dump version 17.5 (Ubuntu 17.5-0ubuntu0.25.04.1)
 
--- Started on 2025-07-26 15:32:29 CEST
+-- Started on 2025-07-26 15:58:53 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,22 +18,12 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- TOC entry 4 (class 2615 OID 2200)
--- Name: public; Type: SCHEMA; Schema: -; Owner: app
---
-
--- *not* creating schema, since initdb creates it
-
-
-ALTER SCHEMA public OWNER TO app;
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- TOC entry 209 (class 1259 OID 16385)
+-- TOC entry 215 (class 1259 OID 16385)
 -- Name: grafana_file; Type: TABLE; Schema: public; Owner: app
 --
 
@@ -46,8 +36,8 @@ CREATE TABLE public.grafana_file (
 ALTER TABLE public.grafana_file OWNER TO app;
 
 --
--- TOC entry 3328 (class 0 OID 16385)
--- Dependencies: 209
+-- TOC entry 3345 (class 0 OID 16385)
+-- Dependencies: 215
 -- Data for Name: grafana_file; Type: TABLE DATA; Schema: public; Owner: app
 --
 
@@ -65,17 +55,7 @@ COPY public.grafana_file (creation_date, size) FROM stdin;
 \.
 
 
---
--- TOC entry 3334 (class 0 OID 0)
--- Dependencies: 4
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: app
---
-
-REVOKE USAGE ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO PUBLIC;
-
-
--- Completed on 2025-07-26 15:32:29 CEST
+-- Completed on 2025-07-26 15:58:53 CEST
 
 --
 -- PostgreSQL database dump complete
