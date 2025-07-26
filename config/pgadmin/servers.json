@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "appdb",
+      "Group": "Servers",
+      "Host": "grafana_postgres",
+      "Port": 5432,
+      "MaintenanceDB": "appdb",
+      "Username": "app",
+      "SSLMode": "prefer"
+    }
+  }
+}
