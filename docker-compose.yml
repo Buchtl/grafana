@@ -44,20 +44,15 @@ services:
       - grafana_admin_password
       - postgres_password
     environment:
-      #- GF_LOG_FILTERS=provisioning.dashboard:debug
+      - GF_LOG_FILTERS=provisioning.dashboard:debug
       - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+      #- GF_SECURITY_ADMIN_API_KEY=bootstrap-admin-key
     ports:
       - 8081:3000
     volumes:
-      #- /srv/data/grafana/:/var/lib/grafana
       - "${WORKING_DIR}/config/grafana/provisioning:/etc/grafana/provisioning"
-    #healthcheck:
-    #  test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
-    #  interval: 30s
-    #  timeout: 5s
-    #  retries: 3
     deploy:
       replicas: 1
       restart_policy:
