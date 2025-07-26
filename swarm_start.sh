@@ -15,7 +15,7 @@ IP=`hostname -I | awk '{print $1}'`
 
 STACK_NAME=grafana
 
-export WORKING_DIR=/home/$USER/git/grafana
+WORKING_DIR=/home/$USER/git/grafana
 
 docker swarm init --advertise-addr $IP
 
