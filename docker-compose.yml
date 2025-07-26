@@ -96,12 +96,12 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    #healthcheck:
-    #  test: ["CMD-SHELL", "curl -fsS http://localhost:80/ || exit 1"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 5
-    #  start_period: 20s
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 80 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 50s
 
 volumes:
   pgadmin_data:
