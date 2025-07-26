@@ -15,11 +15,14 @@
 IP=`hostname -I | awk '{print $1}'`
 
 STACK_NAME=grafana
+
 export WORKING_DIR=/home/$USER/git/grafana
 
 docker swarm init --advertise-addr $IP
+
 printf 'app' | docker secret create postgres_password -
 printf 'admin' | docker secret create grafana_admin_password -
+
 docker stack deploy -c docker-compose.yml $STACK_NAME
 docker stack ls
 docker stack services $STACK_NAME
