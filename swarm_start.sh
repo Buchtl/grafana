@@ -12,6 +12,8 @@
 #fi
 
 IP=`hostname -I | awk '{print $1}'`
+USER_UID="1000"
+USER_GID="1000"
 
 STACK_NAME=grafana
 
