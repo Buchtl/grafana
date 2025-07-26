@@ -5,7 +5,7 @@
 -- Dumped from database version 16.9 (Debian 16.9-1.pgdg120+1)
 -- Dumped by pg_dump version 17.5 (Ubuntu 17.5-0ubuntu0.25.04.1)
 
--- Started on 2025-07-26 15:58:53 CEST
+-- Started on 2025-07-26 16:04:24 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -46,16 +46,16 @@ COPY public.grafana_file (creation_date, size) FROM stdin;
 2025-07-26 06:23:59.13001	4000
 2025-07-24 07:09:49.193354	6000
 2025-07-22 06:24:04.625707	1000
-2023-07-26 07:09:44.131377	8000
 2025-07-21 06:23:52.899231	3000
 2025-07-20 06:23:52.899231	7500
 2025-07-25 06:25:52.899231	5300
-2023-07-26 02:09:44.131377	7000
-2023-07-26 12:09:44.131377	5000
+2025-07-26 02:09:44.131377	7000
+2025-07-26 12:09:44.131377	5000
+2025-07-26 07:09:44.131377	8000
 \.
 
 
--- Completed on 2025-07-26 15:58:53 CEST
+-- Completed on 2025-07-26 16:04:24 CEST
 
 --
 -- PostgreSQL database dump complete
