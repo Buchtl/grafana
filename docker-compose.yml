@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14.18
+    #build:
+    #  context: .
+    #user: 1000:1000
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_DB: appdb
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - /srv/data/postgres:/var/lib/postgresql/data/pgdata
+      - /srv/data/backup:/backup
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  adminer:
+    image: adminer:5.3.0
+    user: 1000:1000
+    restart: always
+    ports:
+      - 8080:8080
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  grafana:
+    image: grafana/grafana:12.1.0-ubuntu
+    user: 1000:1000
+    secrets:
+      - grafana_admin_password
+      - postgres_password
+    environment:
+      - GF_LOG_FILTERS=provisioning.dashboard:debug
+      - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+    ports:
+      - 8081:3000
+    volumes:
+      #- /srv/data/grafana/:/var/lib/grafana
+      - /home/user/git/grafana/config/grafana/provisioning:/etc/grafana/provisioning
+    #healthcheck:
+    #  test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+    #  interval: 30s
+    #  timeout: 5s
+    #  retries: 3
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+secrets:
+  postgres_password:
+    external: true
+  grafana_admin_password:
+    external: true

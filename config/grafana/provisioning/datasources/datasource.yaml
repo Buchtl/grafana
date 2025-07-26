@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: Postgres
+    type: postgres
+    url: postgres:5432
+    database: appdb
+    user: app
+    secureJsonData:
+      password: $__file{/run/secrets/postgres_password}
+    jsonData:
+      sslmode: "disable"   # Important since your Postgres isn't using SSL
+    isDefault: true
