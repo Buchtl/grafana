@@ -87,11 +87,9 @@ ensure_ca() {
 }
 
 generate_cert() {
-  local cn="$1"
+  cn="$1"
 
-  local tmpconf
   tmpconf="$(mktemp)"
-  local tmpext
   tmpext="$(mktemp)"
   trap 'rm -f "$tmpconf" "$tmpext" "$cn.csr.pem" "${CA_DIR}/ca.crt.pem.srl" 2>/dev/null || true' EXIT
 
