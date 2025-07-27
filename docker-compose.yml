@@ -71,7 +71,7 @@ services:
       #- GF_SECURITY_ADMIN_API_KEY=bootstrap-admin-key
       # Keycloak
       - GF_SERVER_PROTOCOL=https
-      - GF_SERVER_ROOT_URL=https://${HOSTNAME}:8444
+      - GF_SERVER_ROOT_URL=https://${GF_HOSTNAME}:${GF_PORT}
       - GF_SERVER_CERT_FILE=/etc/grafana/grafana.crt
       - GF_SERVER_CERT_KEY=/etc/grafana/grafana.key
       - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(resource_access.grafana.roles, 'admin') && 'Admin' || 'Viewer'
@@ -82,11 +82,11 @@ services:
       - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=grafana
       - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=FA7eOmIpkog7ggBvKAzA6KjDnIYEKHlk
       - GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
-      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://${KC_HOSTNAME}:8446/realms/grafana/protocol/openid-connect/auth
-      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://${KC_HOSTNAME}:8446/realms/grafana/protocol/openid-connect/token
-      - GF_AUTH_GENERIC_OAUTH_API_URL=https://${KC_HOSTNAME}:8446/realms/grafana/protocol/openid-connect/userinfo
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://${KC_HOSTNAME}:${KC_PORT}/realms/grafana/protocol/openid-connect/auth
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://${KC_HOSTNAME}:${KC_PORT}/realms/grafana/protocol/openid-connect/token
+      - GF_AUTH_GENERIC_OAUTH_API_URL=https://${KC_HOSTNAME}:${KC_PORT}/realms/grafana/protocol/openid-connect/userinfo
     ports:
-      - 8444:3000
+      - "${GF_PORT}:3000"
     volumes:
         - "${WORKING_DIR}/config/grafana/provisioning:/etc/grafana/provisioning"
         - "${WORKING_DIR}/certs/localhost.crt.pem:/etc/grafana/grafana.crt"
@@ -163,7 +163,7 @@ services:
       - "${WORKING_DIR}/config/keycloak/grafana-realm.json:/opt/keycloak/data/import/grafana-realm.json"
       - "${WORKING_DIR}/certs:/opt/keycloak/conf/certs/"
     ports:
-      - "8446:8443"
+      - "${KC_PORT}:8443"
     healthcheck:
       test: ["CMD-SHELL", "exec /bin/sh -c 'timeout 2 cat < /dev/null >/dev/null 2>&1 || exit 0'"]
       interval: 10s
