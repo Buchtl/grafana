@@ -60,6 +60,18 @@ services:
       - GF_USERS_HOME_PAGE=/d/d4acfa1d-0701-4c76-842e-a34bde89f50a/ByCategory
       - GF_NEWS_NEWS_FEED_ENABLED=false
       #- GF_SECURITY_ADMIN_API_KEY=bootstrap-admin-key
+      # Keycloak
+      # -GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(roles[*], 'admin') && 'Admin' || 'Viewer'
+      # -GF_AUTH_DISABLE_LOGIN_FORM=true
+      # -GF_AUTH_OAUTH_AUTO_LOGIN=true
+      # -GF_AUTH_GENERIC_OAUTH_ENABLED=true
+      # -GF_AUTH_GENERIC_OAUTH_NAME=Keycloak
+      # -GF_AUTH_GENERIC_OAUTH_CLIENT_ID=<grafana-client-id>
+      # -GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=<grafana-client-secret>
+      # -GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
+      # -GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://<keycloak-host>/realms/<realm>/protocol/openid-connect/auth
+      # -GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://<keycloak-host>/realms/<realm>/protocol/openid-connect/token
+      # -GF_AUTH_GENERIC_OAUTH_API_URL=https://<keycloak-host>/realms/<realm>/protocol/openid-connect/userinfo
     ports:
       - 8081:3000
     volumes:
