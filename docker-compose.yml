@@ -71,9 +71,10 @@ services:
       #- GF_SECURITY_ADMIN_API_KEY=bootstrap-admin-key
       # Keycloak
       - GF_SERVER_PROTOCOL=https
-      - GF_SERVER_ROOT_URL=https://${GF_HOSTNAME}:${GF_PORT}
-      - GF_SERVER_CERT_FILE=/etc/grafana/grafana.crt
-      - GF_SERVER_CERT_KEY=/etc/grafana/grafana.key
+      - GF_SERVER_HTTP_PORT=3000
+      - GF_SERVER_ROOT_URL=https://${GRAFANA_HOSTNAME}:${GRAFANA_PORT}
+      - GF_SERVER_CERT_FILE=/certs/grafana.crt
+      - GF_SERVER_CERT_KEY=/certs/grafana.key
       - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(resource_access.grafana.roles, 'admin') && 'Admin' || 'Viewer'
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_AUTH_OAUTH_AUTO_LOGIN=true
@@ -89,15 +90,15 @@ services:
       - "${GF_PORT}:3000"
     volumes:
         - "${WORKING_DIR}/config/grafana/provisioning:/etc/grafana/provisioning"
-        - "${WORKING_DIR}/certs/localhost.crt.pem:/etc/grafana/grafana.crt"
-        - "${WORKING_DIR}/certs/localhost.key.pem:/etc/grafana/grafana.key"
-        - "${WORKING_DIR}/certs/ca.crt.pem:/usr/local/share/ca-certificates/ca.crt"
-    healthcheck:
-      test: ["CMD", "bash", "-c", "curl -sf https://localhost:3000/api/health || exit 1"]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+        - "${WORKING_DIR}/certs/localhost.crt.pem:/certs/grafana.crt:ro"
+        - "${WORKING_DIR}/certs/localhost.key.pem:/certs/grafana.key:ro"
+        - "${WORKING_DIR}/certs/ca.crt.pem:/etc/ssl/certs/ca-certificates.crt"
+    #healthcheck:
+    #  test: ["CMD", "bash", "-c", "curl -k -sf https://${GRAFANA_HOSTNAME}:${GRAFANA_PORT}/api/health || exit 1"]
+    #  interval: 30s
+    #  timeout: 5s
+    #  retries: 5
+    #  start_period: 30s
     deploy:
       replicas: 1
       restart_policy:
@@ -153,11 +154,8 @@ services:
       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keycloak/conf/certs/localhost.key.pem
     command:
       - start
-      - --http-enabled=true
-      - --http-port=8080
       - --hostname=${KC_HOSTNAME}
       - --hostname-strict=false
-      - --proxy-headers=xforwarded
       - --import-realm
     volumes:
       - "${WORKING_DIR}/config/keycloak/grafana-realm.json:/opt/keycloak/data/import/grafana-realm.json"
