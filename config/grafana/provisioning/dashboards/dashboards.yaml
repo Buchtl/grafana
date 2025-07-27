@@ -1,6 +1,6 @@
 apiVersion: 1
 providers:
-  - name: "Provisioned Dashboards"
+  - name: "ByCategory"
     type: file
     disableDeletion: false
     editable: true
