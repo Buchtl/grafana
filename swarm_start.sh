@@ -11,7 +11,9 @@
 #  [[ -z "$IP" ]] && { echo "Error: IP is required."; exit 1; }
 #fi
 
-IP=`hostname -I | awk '{print $1}'`
+export IP=`hostname -I | awk '{print $1}'`
+export HOSTNAME=$IP
+export KC_HOSTNAME=$IP
 USER_UID="1000"
 USER_GID="1000"
 

@@ -12,6 +12,7 @@ services:
     secrets:
       - postgres_password
     volumes:
+      - "${WORKING_DIR}/config/postgres/init-multiple-db.sh:/docker-entrypoint-initdb.d/init-multiple-db.sh"
       #- /srv/data/postgres:/var/lib/postgresql/data/pgdata
       #- "${WORKING_DIR}/data/postgres/appdb.sql:/docker-entrypoint-initdb.d/appdb.sql"
       - "${WORKING_DIR}/config/postgres/restore.sh:/docker-entrypoint-initdb.d/restore.sh"
@@ -61,17 +62,19 @@ services:
       - GF_NEWS_NEWS_FEED_ENABLED=false
       #- GF_SECURITY_ADMIN_API_KEY=bootstrap-admin-key
       # Keycloak
-      # -GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(roles[*], 'admin') && 'Admin' || 'Viewer'
-      # -GF_AUTH_DISABLE_LOGIN_FORM=true
-      # -GF_AUTH_OAUTH_AUTO_LOGIN=true
-      # -GF_AUTH_GENERIC_OAUTH_ENABLED=true
-      # -GF_AUTH_GENERIC_OAUTH_NAME=Keycloak
-      # -GF_AUTH_GENERIC_OAUTH_CLIENT_ID=<grafana-client-id>
-      # -GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=<grafana-client-secret>
-      # -GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
-      # -GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://<keycloak-host>/realms/<realm>/protocol/openid-connect/auth
-      # -GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://<keycloak-host>/realms/<realm>/protocol/openid-connect/token
-      # -GF_AUTH_GENERIC_OAUTH_API_URL=https://<keycloak-host>/realms/<realm>/protocol/openid-connect/userinfo
+      - GF_SERVER_ROOT_URL=http://${HOSTNAME}:8081
+      #- GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(roles[*], 'admin') && 'Admin' || 'Viewer'
+      - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH="contains(resource_access.grafana.roles[*], 'admin') && 'Admin' || 'Viewer'"
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_OAUTH_AUTO_LOGIN=true
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true
+      - GF_AUTH_GENERIC_OAUTH_NAME=Keycloak
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=grafana
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=FA7eOmIpkog7ggBvKAzA6KjDnIYEKHlk
+      - GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://${KC_HOSTNAME}:8083/realms/grafana/protocol/openid-connect/auth
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://${KC_HOSTNAME}:8083/realms/grafana/protocol/openid-connect/token
+      - GF_AUTH_GENERIC_OAUTH_API_URL=http://${KC_HOSTNAME}:8083/realms/grafana/protocol/openid-connect/userinfo
     ports:
       - 8081:3000
     volumes:
@@ -116,6 +119,44 @@ services:
       timeout: 10s
       retries: 5
       start_period: 50s
+
+  keycloak:
+    image: keycloak/keycloak:26.3
+    depends_on:
+      - postgres
+    user: "${USER_UID}:${USER_GID}"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-keycloak}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-keycloak}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak}
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_PROXY: edge
+      KC_HOSTNAME: ${KC_HOSTNAME}
+    command:
+      - start
+      - --http-enabled=true
+      - --http-port=8080
+      - --hostname=${KC_HOSTNAME}
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      - --import-realm
+    volumes:
+      - "${WORKING_DIR}/config/keycloak/grafana-realm.json:/opt/keycloak/data/import/grafana-realm.json"
+    ports:
+      - "8083:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "exec /bin/sh -c 'timeout 2 cat < /dev/null >/dev/null 2>&1 || exit 0'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
 volumes:
   pgadmin_data:
