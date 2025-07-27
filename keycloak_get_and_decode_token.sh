@@ -3,7 +3,7 @@ set -euo pipefail
 
 # ------------ Config ------------
 url=$(hostname -I | awk '{print $1}')
-port="8083"
+port="8446"
 username="admin"
 password="admin"
 realm="grafana"
@@ -19,10 +19,10 @@ need() {
 }
 need jq
 
-echo "Requesting token from Keycloak at http://$url:$port/realms/$realm/protocol/openid-connect/token ..." >&2
+echo "Requesting token from Keycloak at https://$url:$port/realms/$realm/protocol/openid-connect/token ..." >&2
 
 RESP_JSON="$(
-  curl -sS --location --request POST "http://$url:$port/realms/$realm/protocol/openid-connect/token" \
+  curl -k -sS --location --request POST "https://$url:$port/realms/$realm/protocol/openid-connect/token" \
     --header 'Content-Type: application/x-www-form-urlencoded' \
     --data-urlencode "client_id=$client" \
     --data-urlencode "client_secret=$client_secret" \
