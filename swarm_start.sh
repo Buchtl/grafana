@@ -17,8 +17,8 @@ export KC_HOSTNAME=$IP
 export KC_PORT="8446"
 export GF_HOSTNAME=$IP
 export GF_PORT="8444"
-USER_UID="1000"
-USER_GID="1000"
+export USER_UID="1000"
+export USER_GID="1000"
 
 STACK_NAME=grafana
 
