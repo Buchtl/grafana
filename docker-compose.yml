@@ -57,6 +57,8 @@ services:
       - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+      - GF_USERS_HOME_PAGE=/d/d4acfa1d-0701-4c76-842e-a34bde89f50a/ByCategory
+      - GF_NEWS_NEWS_FEED_ENABLED=false
       #- GF_SECURITY_ADMIN_API_KEY=bootstrap-admin-key
     ports:
       - 8081:3000
