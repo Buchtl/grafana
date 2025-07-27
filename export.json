@@ -79,7 +79,32 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "category b"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -111,7 +136,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(creation_date, '1d'),  -- groups by day\n  cat,\n  SUM(size) AS Category\nFROM grafana_file\nWHERE $__timeFilter(creation_date)\nGROUP BY 1, cat\nORDER BY 1, cat;\n",
+          "rawSql": "SELECT\n  $__timeGroupAlias(creation_date, '1d'),\n  cat,\n  SUM(size) AS Category\nFROM grafana_file\nWHERE $__timeFilter(creation_date)\n  AND cat IN (${category:singlequote})\nGROUP BY 1, cat\nORDER BY 1, cat;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -169,15 +194,35 @@
   "schemaVersion": 41,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": "",
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Postgres",
+        "includeAll": true,
+        "label": "Category",
+        "multi": true,
+        "name": "category",
+        "options": [],
+        "query": "SELECT DISTINCT cat FROM grafana_file ORDER BY cat;",
+        "refresh": 1,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
   },
   "time": {
-    "from": "now-7d",
-    "to": "now"
+    "from": "2025-07-16T18:57:33.773Z",
+    "to": "2025-07-30T18:57:33.773Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "ByCategory",
-  "uid": "d4acfa1d-0701-4c76-842e-a34bde89f50d",
+  "uid": "d4acfa1d-0701-4c76-842e-a34bde89f50a",
   "version": 1
 }
