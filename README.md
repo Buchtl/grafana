@@ -3,16 +3,33 @@
 ## Dump
 ```
 #pg_dump -U app -d appdb -F c -f /tmp/appdb.dump
-container_name=$(docker ps --filter "label=com.docker.swarm.service.name=grafana_postgres" --format "{{.Names}}")
-docker exec -it ${container_name} pg_dump -U app -d appdb -F c -f /tmp/appdb.dump
-docker cp ${container_name}:/tmp/appdb.dump ./data/postgres/
 ```
-
 
 ## Fix backup made with pgadmin4
 `sed -i '/transaction_timeout/d' ./data/postgres/appdb.sql`
 
 # Grafana
+
+## Provisioning
+
+### Expected wrapper of the exported JSON
+```
+{
+  "apiVersion": 1,
+  "providers": [
+    {
+      "name": "Provisioned Dashboards",
+      "type": "file",
+      "disableDeletion": false,
+      "editable": true,
+      "options": {
+        "path": "/etc/grafana/provisioning/dashboards"
+      }
+    }
+  ]
+}
+```
+
 ## Export Dashboard
 ```
 curl -H "Authorization: Bearer <API_KEY>" \
