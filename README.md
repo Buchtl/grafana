@@ -1,3 +1,8 @@
+# Usage
+Basic usage on local dev (using localhost and local ip)
+1. generate certs for testing: `./certs_generate_local.sh`
+2. deploy and start the stack: `swarm_start.sh`
+3. when done stop and delete the stack: `swarm_delete.sh`
 
 # Postgres
 ## Dump

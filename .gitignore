@@ -1,0 +1,7 @@
+certs/ca.crt.pem
+certs/ca.crt.srl
+certs/ca.key.pem
+certs/localhost.crt.pem
+certs/localhost.csr.pem
+certs/localhost.key.pem
+certs_generate_local.sh
